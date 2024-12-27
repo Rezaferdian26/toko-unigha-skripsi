@@ -11,6 +11,7 @@ import { UserContext } from "@/contexts/userContext";
 import { myToastError } from "@/utils/myToast";
 import { useRouter } from "next/router";
 import Image from "next/legacy/image";
+import { FLASK_URL } from "@/utils/api-url";
 
 export default function DetailProduct({
   product,
@@ -227,7 +228,7 @@ export async function getServerSideProps(context) {
     );
 
     const res = await fetch(
-      "http://127.0.0.1:5000/products/" + responseProduct.data.data.id
+      `${FLASK_URL}/products/${responseProduct.data.data.id}`
     );
     const responseRecommendation = await res.json();
     const productRecomendations = responseRecommendation.data;

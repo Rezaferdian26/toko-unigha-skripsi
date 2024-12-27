@@ -5,7 +5,6 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "react-loading-skeleton/dist/skeleton.css";
 import axios from "axios";
-import Cookies from "js-cookie";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL =

@@ -8,6 +8,7 @@ import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 import HeadMetaTag from "@/components/HeadMetaTag";
 import { UserContext } from "@/contexts/userContext";
+import { FLASK_URL } from "@/utils/api-url";
 
 export const metadata = {
   title: "Test metada",
@@ -24,9 +25,7 @@ export default function Home({
   const fetchData = async () => {
     try {
       if (isLogin) {
-        const res = await fetch(
-          "http://127.0.0.1:5000/products?usr=" + user.id
-        );
+        const res = await fetch(`${FLASK_URL}/products?usr=${user.id}`);
         const responseRecommendation = await res.json();
         setRecomendationProducts(responseRecommendation.data);
       }
