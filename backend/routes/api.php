@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\LandingPageController;
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TokoController;
@@ -56,3 +57,12 @@ Route::resource('category', CategoryController::class, [
 
 // USER ACTIVITY
 Route::post('/add-activity', [UserActivityController::class, 'store'])->middleware('auth:sanctum');
+
+// order
+Route::resource('order', OrderController::class, [
+    'only' => ['index', 'store', 'show', 'update', 'destroy'],
+])->middleware('auth:sanctum');
+Route::post('/order/{order}/payment', [OrderController::class, 'payment'])->middleware('auth:sanctum');
+Route::get('/verification-order', [OrderController::class, 'verificationView'])->middleware('auth:sanctum');
+Route::put('verification-order/{order}', [OrderController::class, 'verification'])->middleware('auth:sanctum');
+Route::put('final-order/{order}', [OrderController::class, 'finalOrder'])->middleware('auth:sanctum');

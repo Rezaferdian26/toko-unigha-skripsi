@@ -1,6 +1,6 @@
 import Layout from "@/components/layout";
 import ProductImage from "@/components/detail-page/ProductImage";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import Card from "@/components/Card";
 import Link from "next/link";
 import axios from "axios";
@@ -12,6 +12,7 @@ import { myToastError } from "@/utils/myToast";
 import { useRouter } from "next/router";
 import Image from "next/legacy/image";
 import { FLASK_URL } from "@/utils/api-url";
+import Cookies from "js-cookie";
 
 export default function DetailProduct({
   product,
@@ -23,6 +24,7 @@ export default function DetailProduct({
   const [error, setError] = useState("");
   // const [productRecomendations, setProductRecomendations] = useState([]);
   const router = useRouter();
+  const buyRef = useRef();
 
   const { user, isLogin } = useContext(UserContext);
 
@@ -48,11 +50,37 @@ export default function DetailProduct({
       myToastError("Anda tidak dapat membeli produk sendiri");
       return;
     }
-    router.push(
-      `https://api.whatsapp.com/send?phone=${changePhoneNumber(
-        product.phone
-      )}&text=Halo%20admin,%20saya%20ingin%20membeli%20produk%20${productName}`
-    );
+
+    if (count === 0) {
+      setError("Minimal pembelian produk ini adalah 1");
+    } else {
+      setError("");
+      buyRef.current.click();
+    }
+  };
+
+  const handlePayment = async (product) => {
+    try {
+      const response = await axios.post(
+        "/api/order",
+        {
+          product_id: product.id,
+          toko_id: product.toko_id,
+          user_id: user.id,
+          qty: count,
+          price: product.price,
+        },
+        {
+          headers: {
+            "X-XSRF-TOKEN": Cookies.get("XSRF-TOKEN"),
+          },
+        }
+      );
+      console.log(response.data);
+      router.push("/checkout/" + response.data.id);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -132,10 +160,90 @@ export default function DetailProduct({
                 onClick={() => {
                   handleButtonBuyClick(product.name);
                 }}
-                disabled={error ? true : false}
               >
                 Beli Sekarang
               </button>
+              <div className="drawer z-50">
+                <input
+                  id="my-drawer"
+                  type="checkbox"
+                  className="drawer-toggle"
+                />
+                <div className="drawer-content">
+                  {/* Page content here */}
+                  <label
+                    htmlFor="my-drawer"
+                    className="btn btn-primary drawer-button hidden"
+                    ref={buyRef}
+                  >
+                    Open drawer
+                  </label>
+                </div>
+                <div className="drawer-side">
+                  <label
+                    htmlFor="my-drawer"
+                    aria-label="close sidebar"
+                    className="drawer-overlay"
+                  ></label>
+                  <div className="menu bg-base-200 text-base-content min-h-full w-96 p-4">
+                    <div className="flex items-center">
+                      <h1 className="text-lg font-bold">Detail Pembelian</h1>
+                      <label
+                        htmlFor="my-drawer"
+                        className="btn btn-square btn-ghost absolute right-2 top-2"
+                      >
+                        ✕
+                      </label>
+                    </div>
+                    <div className="mt-5">
+                      <div className="mt-5 border-t pt-5">
+                        <div className="flex justify-between">
+                          <p className="text-sm font-bold">Nama Produk</p>
+                          <p className="text-sm">{product.name}</p>
+                        </div>
+                        <div className="flex justify-between mt-2">
+                          <p className="text-sm font-bold">Harga</p>
+                          <p className="text-sm">
+                            Rp{" "}
+                            <span>
+                              {new Intl.NumberFormat("id-ID", {
+                                // style: "currency",
+                                currency: "IDR",
+                              }).format(product.price)}
+                            </span>
+                          </p>
+                        </div>
+                        <div className="flex justify-between mt-2">
+                          <p className="text-sm font-bold">Jumlah</p>
+                          <p className="text-sm">{count}</p>
+                        </div>
+                        <div className="flex justify-between mt-2">
+                          <p className="text-sm font-bold">Total Harga</p>
+                          <p className="text-sm">
+                            Rp{" "}
+                            <span>
+                              {new Intl.NumberFormat("id-ID", {
+                                // style: "currency",
+                                currency: "IDR",
+                              }).format(product.price * count)}
+                            </span>
+                          </p>
+                        </div>
+                        <div className="mt-5">
+                          <button
+                            className="btn btn-primary w-full"
+                            onClick={() => {
+                              handlePayment(product);
+                            }}
+                          >
+                            Bayar
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
               <div
                 className="tooltip align-middle ms-10"
                 data-tip="Saat ini belum tersedia metode pembayaran, klik tombol beli sekarang untuk melanjutkan ke Whatsapp untuk membeli produk"
@@ -228,7 +336,7 @@ export async function getServerSideProps(context) {
     );
 
     const res = await fetch(
-      `${FLASK_URL}/products/${responseProduct.data.data.id}`
+      `http:/127.0.0.1:5000/products/${responseProduct.data.data.id}`
     );
     const responseRecommendation = await res.json();
     const productRecomendations = responseRecommendation.data;

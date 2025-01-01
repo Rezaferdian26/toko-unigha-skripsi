@@ -8,6 +8,7 @@ import { TokoContext } from "@/contexts/tokoContext";
 import Image from "next/legacy/image";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { MdPayments } from "react-icons/md";
 
 export default function NavbarMenu() {
   const router = useRouter();
@@ -147,6 +148,11 @@ export default function NavbarMenu() {
                 <li>
                   <Link href="/profile">
                     <FaUser className="me-2 text-gray-700" /> Profile
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/myorder">
+                    <MdPayments className="me-2 text-gray-700" /> Pesanan Saya
                   </Link>
                 </li>
                 <li>

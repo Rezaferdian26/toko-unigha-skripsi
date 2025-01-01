@@ -1,4 +1,5 @@
 import LayoutApp from "@/components/LayoutApp";
+import PesananTabView from "@/components/mytoko/PesananTabView";
 import TabProductView from "@/components/mytoko/TabProductView";
 import TabTokoView from "@/components/mytoko/TabTokoView";
 import ProtectedPage from "@/components/protect-pages/ProtectedPage";
@@ -43,7 +44,7 @@ export default function MyToko() {
     router.replace(`/mytoko?tab=${tabs[index]}`);
   };
 
-  const tabs = ["toko", "produk"];
+  const tabs = ["toko", "produk", "pesanan"];
 
   try {
     return (
@@ -88,6 +89,15 @@ export default function MyToko() {
                 )}
                 {page === "produk" && (
                   <TabProductView
+                    products={products}
+                    setProducts={setProducts}
+                    categories={categories}
+                    loading={loading}
+                    setLoading={setLoading}
+                  />
+                )}
+                {page === "pesanan" && (
+                  <PesananTabView
                     products={products}
                     setProducts={setProducts}
                     categories={categories}
