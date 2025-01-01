@@ -9,6 +9,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TokoController;
 use App\Http\Controllers\UserActivityController;
 use App\Http\Controllers\UserController;
+use App\Models\User;
+use App\Notifications\BrowserNotification;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -75,4 +77,9 @@ Route::middleware('auth:sanctum')->post('/subscribe', function (Request $request
     );
 
     return response()->json(['success' => true]);
+});
+
+Route::get('/tes-notification', function () {
+    $user = User::where('id', '826d2a80-d5f4-44b8-bf35-e2bf0ed8cfd8'); // Sesuaikan ID pengguna
+    $user->notify(new BrowserNotification());
 });
