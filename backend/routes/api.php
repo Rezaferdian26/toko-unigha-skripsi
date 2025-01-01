@@ -66,3 +66,13 @@ Route::post('/order/{order}/payment', [OrderController::class, 'payment'])->midd
 Route::get('/verification-order', [OrderController::class, 'verificationView'])->middleware('auth:sanctum');
 Route::put('verification-order/{order}', [OrderController::class, 'verification'])->middleware('auth:sanctum');
 Route::put('final-order/{order}', [OrderController::class, 'finalOrder'])->middleware('auth:sanctum');
+
+Route::middleware('auth:sanctum')->post('/subscribe', function (Request $request) {
+    $request->user()->updatePushSubscription(
+        $request->endpoint,
+        $request->key,
+        $request->auth
+    );
+
+    return response()->json(['success' => true]);
+});
