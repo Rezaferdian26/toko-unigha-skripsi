@@ -344,7 +344,7 @@ export async function getServerSideProps(context) {
     );
 
     const res = await fetch(
-      `http:/127.0.0.1:5000/products/${responseProduct.data.data.id}`
+      `https://flask.tokounigha.com/products/${responseProduct.data.data.id}`
     );
     const responseRecommendation = await res.json();
     const productRecomendations = responseRecommendation.data;

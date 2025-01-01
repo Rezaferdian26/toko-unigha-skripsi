@@ -25,7 +25,9 @@ export default function Home({
   const fetchData = async () => {
     try {
       if (isLogin) {
-        const res = await fetch(`${FLASK_URL}/products?usr=${user.id}`);
+        const res = await fetch(
+          `https://flask.tokounigha.com/products?usr=${user.id}`
+        );
         const responseRecommendation = await res.json();
         setRecomendationProducts(responseRecommendation.data);
       }
