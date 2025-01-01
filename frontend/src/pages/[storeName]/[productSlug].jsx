@@ -87,9 +87,17 @@ export default function DetailProduct({
     if (isLogin) {
       const addActivity = async () => {
         try {
-          const response = await axios.post("/api/add-activity", {
-            product_id: product.id,
-          });
+          const response = await axios.post(
+            "/api/add-activity",
+            {
+              product_id: product.id,
+            },
+            {
+              headers: {
+                "X-XSRF-TOKEN": Cookies.get("XSRF-TOKEN"),
+              },
+            }
+          );
         } catch (error) {
           return;
         }
