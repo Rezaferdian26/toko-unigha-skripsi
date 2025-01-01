@@ -58,9 +58,9 @@ export default function Checkout() {
     <LayoutApp>
       <div className="max-w-3xl mx-auto">
         <div className="bg-white p-4 rounded shadow h-full">
-          <h1 className="text-indigo-900 font-bold tracking-wide text-2xl mb-3 uppercase">
+          <h2 className="text-indigo-900 font-bold tracking-wide text-2xl mb-3 uppercase">
             Checkout
-          </h1>
+          </h2>
           <FaLocationDot className="inline" /> Alamat Pengiriman
           <div className="mt-3 border p-3 flex justify-between cursor-pointer">
             <p>{order?.user?.address}</p>
