@@ -37,14 +37,14 @@ export default function BukaTokoView({ formik, user, loading }) {
                   htmlFor="identification_number"
                   className="block text-sm mb-1"
                 >
-                  NPM/NIDN
+                  NPM/NIDN/NIK
                 </label>
                 <div className="relative">
                   <input
                     type="text"
                     name="identification_number"
                     id="identification_number"
-                    placeholder="Type your NPM/NIDN"
+                    placeholder="Type your NPM/NIDN/NIK"
                     className="mb-2 shadow-sm text-sm rounded shadow-gray-300 w-full active:border-none input p-4 ps-8 h-0"
                     {...formik.getFieldProps("identification_number")}
                   />
@@ -57,7 +57,8 @@ export default function BukaTokoView({ formik, user, loading }) {
                   ) : null}
                 </div>
                 <p className="text-slate-400 text-xs">
-                  *Jika mahasiswa tuliskan NPM, atau jika dosen tuliskan NIDN.
+                  *Jika mahasiswa tuliskan NPM, jika dosen tuliskan NIDN, dan
+                  jika pegawai tuliskan NIK.
                 </p>
               </div>
               <div className="mb-3">
